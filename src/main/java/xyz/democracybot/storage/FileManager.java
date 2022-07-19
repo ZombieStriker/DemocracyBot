@@ -25,7 +25,7 @@ public class FileManager {
             f.mkdirs();
         return f;
     }
-    public File getUserData(long userid){
+    public File getUserData(String userid){
         return new File(getUserDataFolder(),userid+".yml");
     }
     public File getMessage(long messageid){
@@ -37,6 +37,9 @@ public class FileManager {
     }
     public File getTokenFile(){
         return new File(folder,"token.yml");
+    }
+    public File getVoteData(){
+        return new File(folder,"votes.yml");
     }
     public File getTextMessagesFile(){
         return new File(folder,"Messages.yml");

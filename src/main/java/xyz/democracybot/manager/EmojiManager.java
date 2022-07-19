@@ -9,4 +9,24 @@ public class EmojiManager {
     public static final String BLUE = "\uD83D\uDFE6";
     public static final String PURPLE = "\uD83D\uDFEA";
     public static final String BROWN = "\uD83D\uDFEB";
+
+    public static String get(String key) {
+        switch (key.toLowerCase()) {
+            case "red":
+                return RED;
+            case "orange":
+                return ORANGE;
+            case "yellow":
+                return YELLOW;
+            case "green":
+                return GREEN;
+            case "blue":
+                return BLUE;
+            case "purple":
+                return PURPLE;
+            case "brown":
+                return BROWN;
+        }
+        return key;
+    }
 }

@@ -10,27 +10,33 @@ import org.jetbrains.annotations.NotNull;
 import xyz.democracybot.data.DiscordUser;
 import xyz.democracybot.data.Message;
 import xyz.democracybot.data.Promise;
+import xyz.democracybot.data.Vote;
+import xyz.democracybot.data.messages.reactactions.ReactAction;
 import xyz.democracybot.manager.EmojiManager;
 import xyz.democracybot.utils.DiscordMessageBuilder;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DiscordListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(event.getAuthor().isBot())
+        if (event.getAuthor().isBot())
             return;
-        if(event.getChannelType()== ChannelType.PRIVATE){
+        if (event.getChannelType() == ChannelType.PRIVATE) {
             DiscordUser user = DemocracyBot.getInstance().getUser(event.getAuthor());
-            DiscordMessageBuilder dmb = new DiscordMessageBuilder("Test");
-            dmb.addReaction(EmojiManager.RED);
-            Promise<Long> id = dmb.build(event.getAuthor());
+            if (event.getMessage().getContentRaw().startsWith("!")) {
+                if (DemocracyBot.getInstance().getCommandManager().containsCommand(event.getMessage().getContentRaw())) {
+                    DemocracyBot.getInstance().getCommandManager().call(event.getMessage().getContentRaw(), user);
+                }
+            }
         }
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         super.onGuildMemberJoin(event);
-        if(event.getUser().isBot())
+        if (event.getUser().isBot())
             return;
 
         DiscordUser account = DiscordUser.getAccount(event.getUser());
@@ -40,21 +46,30 @@ public class DiscordListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         super.onMessageReactionAdd(event);
-        if(event.getUser().isBot())
+        if (event.getUser().isBot())
             return;
 
-        Message message = new Message(event.getMessageIdLong(), DemocracyBot.getInstance().getFileManager().getMessage(event.getMessageIdLong()));
-        if(message!=null)
-        message.getActionFor(event.getReaction().getMessageId()).onAddReaction(DemocracyBot.getInstance().getUser(event.getUser()));
+        Message message = DemocracyBot.getInstance().getMessage(event.getMessageIdLong());
+        if (message != null) {
+            ReactAction action = message.getActionFor(event.getReaction().getReactionEmote().getEmoji());
+            if (action != null) {
+                action.onAddReaction(message, DemocracyBot.getInstance().getUser(event.getUser()));
+            }else{
+                System.out.println("Failed to find action "+event.getReaction().getMessageId());
+            }
+        }
     }
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         super.onMessageReactionRemove(event);
-        if(event.getUser().isBot())
+        if (event.getUser().isBot())
             return;
-        Message message = new Message(event.getMessageIdLong(), DemocracyBot.getInstance().getFileManager().getMessage(event.getMessageIdLong()));
-        if(message!=null)
-        message.getActionFor(event.getReaction().getMessageId()).onRemoveReaction(DemocracyBot.getInstance().getUser(event.getUser()));
+        Message message = DemocracyBot.getInstance().getMessage(event.getMessageIdLong());
+        if (message != null) {
+            ReactAction action = message.getActionFor(event.getReaction().getReactionEmote().getEmoji());
+            if (action != null)
+                action.onRemoveReaction(message, DemocracyBot.getInstance().getUser(event.getUser()));
+        }
     }
 }

@@ -2,9 +2,11 @@ package xyz.democracybot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import xyz.democracybot.data.DiscordUser;
 import xyz.democracybot.ezyaml.EZYaml;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -18,8 +20,15 @@ public class Main {
                 return;
             }
             String token = ezYaml.getString("token");
-            JDA bot = JDABuilder.createDefault(token).addEventListeners(new DiscordListener()).build();
+            DiscordListener listener = new DiscordListener();
+            JDA bot = JDABuilder.createDefault(token).addEventListeners(listener).build();
+            DemocracyBot.getInstance().setJda(bot);
 
+
+            //Loads all the users
+            for(File f : DemocracyBot.getInstance().getFileManager().getUserDataFolder().listFiles()){
+                DiscordUser.create(DemocracyBot.getInstance(),f);
+            }
         } catch (LoginException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

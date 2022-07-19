@@ -1,6 +1,7 @@
 package xyz.democracybot.data.messages.reactactions;
 
 import xyz.democracybot.data.DiscordUser;
+import xyz.democracybot.data.Message;
 
 public class ReactBasicRoleAction implements ReactAction{
 
@@ -12,13 +13,18 @@ public class ReactBasicRoleAction implements ReactAction{
 
 
     @Override
-    public boolean onAddReaction(DiscordUser user) {
+    public boolean onAddReaction(Message message, DiscordUser user) {
 
         return true;
     }
 
     @Override
-    public boolean onRemoveReaction(DiscordUser user) {
+    public boolean onRemoveReaction(Message message, DiscordUser user) {
         return true;
+    }
+
+    @Override
+    public String serialize() {
+        return this.getClass().getName()+" "+roleid;
     }
 }
