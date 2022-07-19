@@ -12,6 +12,20 @@ public class EZYaml extends EZConfigurationSection{
     public EZYaml(File file){
         super(null);
         this.file = file;
+        if(!file.getParentFile().exists()){
+            file.mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }else if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         try {
             InputStream is = new FileInputStream(file);
             Yaml yaml = new Yaml();
