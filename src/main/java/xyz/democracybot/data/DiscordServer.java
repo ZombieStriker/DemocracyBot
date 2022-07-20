@@ -2,13 +2,23 @@ package xyz.democracybot.data;
 
 public class DiscordServer {
 
-    private final long serverid;
+    private final String serverid;
+    private String name;
 
-    public DiscordServer(long serverid){
+    public DiscordServer(String serverid, String name){
         this.serverid = serverid;
+        this.name = name;
     }
 
-    public long getServerid() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getServerid() {
         return serverid;
     }
 }

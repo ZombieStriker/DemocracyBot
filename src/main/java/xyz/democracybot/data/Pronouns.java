@@ -16,6 +16,7 @@ public class Pronouns {
         list.add(new Pronouns(PronounBase.SHE,"she","her"));
         list.add(new Pronouns(PronounBase.THEY,"they","them"));
         list.add(new Pronouns(PronounBase.IT,"it","its"));
+        list.add(new Pronouns(PronounBase.NEO,null,null));
     }
 
     private Pronouns(PronounBase base, String v1, String v2){
@@ -24,23 +25,41 @@ public class Pronouns {
         this.pronoun2 = v2;
     }
 
-    public String getPronoun1() {
+    public String getPronoun1(DiscordUser user) {
+        if(user!=null&&pronoun1==null){
+            return user.getUsername();
+        }
         return pronoun1;
     }
 
-    public String getPronoun2() {
+    public String getPronoun2(DiscordUser user) {
+        if(user!=null&&pronoun2==null){
+            return user.getUsername();
+        }
         return pronoun2;
     }
 
-    public static Pronouns getPronoun(String v1, String v2){
+    public PronounBase getBase() {
+        return base;
+    }
+
+    public static List<Pronouns> getPronouns(){
+        return list;
+    }
+
+    public static Pronouns getPronoun(String v1){
         for(Pronouns pn : list){
-            if(pn.getPronoun1().equalsIgnoreCase(v1)&&pn.getPronoun2().equalsIgnoreCase(v2)){
+            if(pn.getBase()==PronounBase.NEO)
+                continue;
+            if(pn.getPronoun1(null).equalsIgnoreCase(v1)||pn.getPronoun2(null).equalsIgnoreCase(v1)){
                 return pn;
             }
         }
-        Pronouns pn = new Pronouns(PronounBase.NEO,v1,v2);
-        list.add(pn);
-        return pn;
+        for(Pronouns pn : list) {
+            if (pn.getPronoun1(null)==null||pn.getPronoun2(null)==null)
+                return pn;
+        }
+        return null;
     }
 
     enum PronounBase{

@@ -1,6 +1,9 @@
 package xyz.democracybot.manager;
 
 import xyz.democracybot.data.messages.reactactions.ReactAction;
+import xyz.democracybot.data.messages.reactactions.ReactBasicRoleAction;
+import xyz.democracybot.data.messages.reactactions.ReactPronouns;
+import xyz.democracybot.data.messages.reactactions.ReactVoteAction;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,9 +14,15 @@ public class ReactionActionManager {
 
     private List<Class<? extends ReactAction>> actions = new LinkedList<>();
 
+    public ReactionActionManager(){
+        actions.add(ReactBasicRoleAction.class);
+        actions.add(ReactPronouns.class);
+        actions.add(ReactVoteAction.class);
+    }
+
     public Class<? extends ReactAction> getReactionActionByName(String name){
         for(Class<? extends ReactAction> action : actions){
-            if(action.getName().equals(name)){
+            if(action.getName().equalsIgnoreCase(name)){
                 return action;
             }
         }

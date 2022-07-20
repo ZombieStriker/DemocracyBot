@@ -21,52 +21,58 @@ public class DiscordUser {
 
     private User userinstance;
 
-    private DiscordUser(DemocracyBot democracyBot, String id, String username){
+    private DiscordUser(DemocracyBot democracyBot, String id, String username) {
         this.accountID = id;
         this.username = username;
-        democracyBot.getJda().retrieveUserById(id).queue(user -> userinstance=user);
+        democracyBot.getJda().retrieveUserById(id).queue(user -> userinstance = user);
         democracyBot.getUsers().add(this);
     }
-    private DiscordUser(User user){
+
+    private DiscordUser(User user) {
         this.accountID = user.getId();
         this.username = user.getName();
-        userinstance=user;
+        userinstance = user;
         DemocracyBot.getInstance().getUsers().add(this);
     }
 
-    public static DiscordUser create(DemocracyBot democracyBot,File f){
+    public static DiscordUser create(DemocracyBot democracyBot, File f) {
         EZYaml ezYaml = new EZYaml(f);
-        return new DiscordUser(democracyBot, f.getName().substring(0,f.getName().length()-4),ezYaml.getString("username"));
+        return new DiscordUser(democracyBot, f.getName().substring(0, f.getName().length() - 4), ezYaml.getString("username"));
     }
 
-    public static DiscordUser getAccount(User user){
-        for(DiscordUser u: DemocracyBot.getInstance().getUsers()){
-            if(u.getAccountID().equals(user.getId()))
+    public static DiscordUser getAccount(User user) {
+        for (DiscordUser u : DemocracyBot.getInstance().getUsers()) {
+            if (u.getAccountID().equals(user.getId()))
                 return u;
         }
         File file = DemocracyBot.getInstance().getFileManager().getUserData(user.getId());
-        if(file.exists()) {
+        if (file.exists()) {
             DiscordUser d = new DiscordUser(user);
-            d.sendReactRoles(user);
             DemocracyBot.getInstance().getUsers().add(d);
 
             EZYaml yaml = new EZYaml(DemocracyBot.getInstance().getFileManager().getUserData(user.getId()));
-            //TODO: Load info
+            if (yaml.contains("roles")) {
+                for (String role : yaml.getKeys()) {
+                    d.getRoleData().add(yaml.getString("roles." + role));
+                }
+            }
 
             return d;
-        }else{
+        } else {
             DiscordUser d = new DiscordUser(user);
-            d.sendReactRoles(user);
             DemocracyBot.getInstance().getUsers().add(d);
 
             EZYaml yaml = new EZYaml(DemocracyBot.getInstance().getFileManager().getUserData(user.getId()));
-            yaml.set("username",user.getName());
+            yaml.set("username", user.getName());
             yaml.save();
             return d;
         }
     }
 
-    private void sendReactRoles(User user) {
+    public void syncRoles(){
+        for(DiscordServer server : DemocracyBot.getInstance().getServers()){
+
+        }
     }
 
 
@@ -79,8 +85,8 @@ public class DiscordUser {
     }
 
     public User getUserInstance() {
-        if(userinstance == null){
-            DemocracyBot.getInstance().getJda().retrieveUserById(accountID).queue(user -> userinstance=user);
+        if (userinstance == null) {
+            DemocracyBot.getInstance().getJda().retrieveUserById(accountID).queue(user -> userinstance = user);
         }
         return userinstance;
     }

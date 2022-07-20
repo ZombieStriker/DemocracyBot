@@ -15,11 +15,6 @@ import java.util.List;
 public class VoteManager {
 
     private List<Vote> activeVotes = new LinkedList<>();
-    private final String[] reactIds = new String[]{EmojiManager.RED, EmojiManager.ORANGE, EmojiManager.YELLOW, EmojiManager.GREEN, EmojiManager.BLUE, EmojiManager.PURPLE, EmojiManager.BROWN};
-
-    public String[] getReactIds() {
-        return reactIds;
-    }
 
     public void registerVote(Vote vote){
         this.activeVotes.add(vote);
@@ -30,7 +25,7 @@ public class VoteManager {
         message.append("New vote: " + vote.getName() + " \n \n Description: " + vote.getDescription());
         message.append("\n Vote options: \n");
         for (int i = 0; i < vote.getOptionsScore().length; i++) {
-            String reaction = reactIds[i];
+            String reaction = DemocracyBot.getInstance().getReactIds()[i];
             message.append("\n");
             message.append(reaction + ": " + vote.getOptionDesc()[i]);
         }

@@ -14,12 +14,13 @@ public class ReactBasicRoleAction implements ReactAction{
 
     @Override
     public boolean onAddReaction(Message message, DiscordUser user) {
-
+        user.getRoleData().add(roleid);
         return true;
     }
 
     @Override
     public boolean onRemoveReaction(Message message, DiscordUser user) {
+        user.getRoleData().remove(roleid);
         return true;
     }
 

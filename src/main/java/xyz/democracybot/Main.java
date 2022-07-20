@@ -2,6 +2,7 @@ package xyz.democracybot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import xyz.democracybot.data.DiscordServer;
 import xyz.democracybot.data.DiscordUser;
 import xyz.democracybot.ezyaml.EZYaml;
 
@@ -28,6 +29,13 @@ public class Main {
             //Loads all the users
             for(File f : DemocracyBot.getInstance().getFileManager().getUserDataFolder().listFiles()){
                 DiscordUser.create(DemocracyBot.getInstance(),f);
+            }
+            EZYaml servers = new EZYaml(DemocracyBot.getInstance().getFileManager().getServers());
+            if(servers.contains("servers")){
+                for(String serverid : servers.getConfigurationSection("servers").getKeys()){
+                    String name = servers.getString("servers."+serverid+".name");
+                    DiscordServer server = new DiscordServer(serverid,name);
+                }
             }
         } catch (LoginException e) {
             throw new RuntimeException(e);

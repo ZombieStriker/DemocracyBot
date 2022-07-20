@@ -34,7 +34,7 @@ public class VoteCreateCommand implements CommandExecutor {
             if (l.isFullfilled()) {
                 Message message = DemocracyBot.getInstance().getMessage(l.get());
                 for (int i = 0; i < descriptionVotes.size(); i++) {
-                    message.addAction(DemocracyBot.getInstance().getVoteManager().getReactIds()[i], new ReactVoteAction(vote.getId() + "", "" + i));
+                    message.addAction(DemocracyBot.getInstance().getReactIds()[i], new ReactVoteAction(vote.getId() + "", "" + i));
                 }
                 message.save();
             } else {
@@ -43,7 +43,7 @@ public class VoteCreateCommand implements CommandExecutor {
                     public void onCall() {
                         Message message = DemocracyBot.getInstance().getMessage(l.get());
                         for (int i = 0; i < descriptionVotes.size(); i++) {
-                            message.addAction(DemocracyBot.getInstance().getVoteManager().getReactIds()[i], new ReactVoteAction(vote.getId() + "", "" + i));
+                            message.addAction(DemocracyBot.getInstance().getReactIds()[i], new ReactVoteAction(vote.getId() + "", "" + i));
                         }
                         message.save();
                     }

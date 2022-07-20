@@ -2,14 +2,12 @@ package xyz.democracybot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
+import xyz.democracybot.command.RoleCommand;
 import xyz.democracybot.command.VoteCreateCommand;
 import xyz.democracybot.data.DiscordServer;
 import xyz.democracybot.data.DiscordUser;
 import xyz.democracybot.data.Message;
-import xyz.democracybot.manager.CommandManager;
-import xyz.democracybot.manager.MessageManager;
-import xyz.democracybot.manager.ReactionActionManager;
-import xyz.democracybot.manager.VoteManager;
+import xyz.democracybot.manager.*;
 import xyz.democracybot.storage.FileManager;
 
 import java.io.File;
@@ -32,6 +30,11 @@ public class DemocracyBot {
 
     private JDA jda;
 
+    private final String[] reactIds = new String[]{EmojiManager.RED, EmojiManager.ORANGE, EmojiManager.YELLOW, EmojiManager.GREEN, EmojiManager.BLUE, EmojiManager.PURPLE, EmojiManager.BROWN};
+
+    public String[] getReactIds() {
+        return reactIds;
+    }
     public static DemocracyBot getInstance() {
         return democracyBot;
     }
@@ -45,6 +48,7 @@ public class DemocracyBot {
 
 
         this.commandManager.registerCommandExecutor("cvote",new VoteCreateCommand());
+        this.commandManager.registerCommandExecutor("roles",new RoleCommand());
 
     }
 

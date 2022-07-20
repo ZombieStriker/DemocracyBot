@@ -41,6 +41,9 @@ public class FileManager {
     public File getVoteData(){
         return new File(folder,"votes.yml");
     }
+    public File getServers(){
+        return new File(folder,"servers.yml");
+    }
     public File getTextMessagesFile(){
         return new File(folder,"Messages.yml");
     }
